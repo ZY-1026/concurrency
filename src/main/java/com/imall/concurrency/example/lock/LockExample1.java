@@ -1,7 +1,10 @@
-package com.imall.concurrency.example.count;
+package com.imall.concurrency.example.lock;
 
+/**
+ * 利用Synchronized进行加锁
+ */
 
-import com.imall.concurrency.annotations.NotThreadSafe;
+import com.imall.concurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
@@ -10,8 +13,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 @Slf4j
-@NotThreadSafe
-public class CountExample {
+@ThreadSafe
+public class LockExample1 {
 
     public static int clientTotal = 5000;
 
@@ -19,7 +22,7 @@ public class CountExample {
 
     public static int count = 0;
 
-    private static void add() {
+    private synchronized static void add() {
         count++;
     }
 
@@ -44,8 +47,6 @@ public class CountExample {
         }
         countDownLatch.await();
         executorService.shutdown();
-        log.info("count = {}", count);
+        log.info("count = {} ", count);
     }
 }
-
-

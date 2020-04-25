@@ -1,17 +1,22 @@
-package com.imall.concurrency.example.count;
+package com.imall.concurrency.example.lock;
 
+/**
+ * 利用ReentrantLock进行加锁
+ */
 
-import com.imall.concurrency.annotations.NotThreadSafe;
+import com.imall.concurrency.annotations.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
-@NotThreadSafe
-public class CountExample {
+@ThreadSafe
+public class LockExample2 {
 
     public static int clientTotal = 5000;
 
@@ -19,8 +24,15 @@ public class CountExample {
 
     public static int count = 0;
 
+    private final static Lock lock = new ReentrantLock();
+
     private static void add() {
-        count++;
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -44,8 +56,6 @@ public class CountExample {
         }
         countDownLatch.await();
         executorService.shutdown();
-        log.info("count = {}", count);
+        log.info("count = {} ", count);
     }
 }
-
-
