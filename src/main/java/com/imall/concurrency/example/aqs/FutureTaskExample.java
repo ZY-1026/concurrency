@@ -24,6 +24,5 @@ public class FutureTaskExample {
         Thread.sleep(1000);
         String result = futureTask.get();
         log.info("result : {} ", result);
-
     }
 }

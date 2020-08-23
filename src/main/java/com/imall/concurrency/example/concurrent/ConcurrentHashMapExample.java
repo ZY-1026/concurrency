@@ -29,15 +29,18 @@ public class ConcurrentHashMapExample {
         final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
         for (int i = 0; i < clientTotal; i++) {
             final int count = i;
-            executorService.execute(() -> {
-                try {
-                    semaphore.acquire();
-                    update(count);
-                    semaphore.release();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        semaphore.acquire();
+                        update(count);
+                        semaphore.release();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    countDownLatch.countDown();
                 }
-                countDownLatch.countDown();
             });
         }
         countDownLatch.await();
